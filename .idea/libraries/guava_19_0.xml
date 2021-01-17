@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="guava-19.0">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../depends/guava-19.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/../depends/junit-4.10.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

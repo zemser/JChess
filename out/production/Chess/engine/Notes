@@ -1,0 +1,44 @@
+Bugs:
+
+dependencies: we use Guava for immutable objects. for example: ImmutableMap.copyOf(map); ImmutableList.copyOf(activePieces);
+Iterables.unmodifiableIterable(Iterables.concat(this.whitePlayer.getLegalMoves(), this.blackPlayer.getLegalMoves()));
+
+
+CV:
+
+I used final for many of objects, like the tile because i want it to be immutable.
+It has some benefits: Security, and Performance. Tile/piece object  will be used heavily, so I optimized it from the start.
+also it makes the program thread safe. u cant extend a final class, so classes of that kind are not final.
+
+board:
+we needed collection to save the tiles, first i chose an array of 64 length but then i changed it to list
+because i wanted it to be immautable and u cant have an immutable array in java
+
+why we used builder:
+it is a good idea when we face many constructor parameters:
+we could use other techniques such as
+1)Telescoping -making many constructors for different paramters we want to pass but its less readable and harder to wrtie
+2)javabeans pattern = set all the fields using setters, but its inconsistent and mandates mutability
+3) Builder - instead of making the desired object directly,
+the client calls a constructor with all the required paramters and gets a builder object. the client calls
+setter-like methods on the builder to set each optional parameter. finally the cliect calls parameterless
+build method to generate the object, which is typically immutbale. the builder is typically  static member class
+of the class it builds.
+
+we use factory in player class to create a move object
+
+
+
+GUI: used Swing -  GUI widget toolkit for Java.
+It is part of Oracle's Java Foundation Classes (JFC) – an API for providing a graphical user interface (GUI) for Java programs.
+We use PGN - a standard plain text format for recording chess games (both the moves and related data), which can be read by humans and is also supported by most chess software.
+
+
+pros:
+we use the same empty tiles and do not generate new ones
+cons of the projects:
+it is built not in the most efficient way. it is focused more on simplicity and design.
+for example i could used an array in the board class to eep track of the tiles, it would be more efficient to access, but
+i wanted to maintain immutability
+in the moove factory in the player class we go through all the possible moves on the board - we could have maybe just the check the moves that are more relevant
+
