@@ -19,6 +19,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import static javax.swing.SwingUtilities.isLeftMouseButton;
@@ -38,6 +40,7 @@ public class Table {
     private Tile desTile;
     private Piece humanMovedPiece;
     private BoardDirection boardDirection;
+    private boolean highlightLegalMoves;
 
     private Color lightTileColor = Color.decode("#FFFACD");
     private Color darkTileColor = Color.decode("#593E1A");
@@ -61,6 +64,7 @@ public class Table {
 
         this.boardPanel = new BoardPanel();
         this.boardDirection = BoardDirection.NORMAL;  //show board in normal order (not flipped)
+        this.highlightLegalMoves = false;
         this.gameFrame.add(this.boardPanel, BorderLayout.CENTER);
 
         this.gameFrame.setVisible(true);
@@ -117,11 +121,26 @@ public class Table {
         flipBoardMenuItem.addActionListener(new ActionListener() {    // assign action on click
             @Override
             public void actionPerformed(ActionEvent e) {
-                boardDirection = boardDirection.opposite();  //switch to oppositerepresentationn
+                boardDirection = boardDirection.opposite();  //switch to opposite representationn
                 boardPanel.drawBoard(board);                //redraw the board
             }
         });
         preferencesMenu.add(flipBoardMenuItem); //add the item to the menu
+
+        //add separator
+        preferencesMenu.addSeparator();
+
+        //create highlight moves item
+        final JCheckBoxMenuItem legalMoveHighlighterCheckbox = new JCheckBoxMenuItem("Highlight legal Moves", false);
+
+        legalMoveHighlighterCheckbox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                highlightLegalMoves = legalMoveHighlighterCheckbox.isSelected();
+            }
+        });
+
+        preferencesMenu.add(legalMoveHighlighterCheckbox);
 
         return preferencesMenu;
     }
@@ -233,7 +252,6 @@ public class Table {
 
             validate();
         }
-
         /**
          * place the image of the piece on the board - add it to the TilePanel
          * @param board check the corresponding tile to the piece
@@ -275,6 +293,25 @@ public class Table {
             validate();
             repaint();
 
+        }
+        private void highlightLegalMoves(final Board board){
+            if(highlightLegalMoves){
+                for(final Move move : pieceLegalMoves(board)){
+                    if(move.getDestinationCoordinate() == this.tileId){
+                        try {
+                            add(new JLabel((new ImageIcon(ImageIO.read(new File("art/basic/green_dot.png"))))));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        }
+        private Collection<Move> pieceLegalMoves(final Board board){
+            if(humanMovedPiece != null && humanMovedPiece.getPieceColor() == board.currentPlayer().getColor()){
+                return humanMovedPiece.calculateMoves(board);
+            }
+        return Collections.emptyList();
         }
     }
 

@@ -33,7 +33,7 @@ public class Knight extends Piece{
      * @param board the game board
      * @return return the list of all the possible moves
      */
-    public Collection<Move> calculateMovess(final Board board){
+    public Collection<Move> calculateMoves(final Board board){
         final List<Move> legalMoves = new ArrayList<>();
         int candidateDestCordinate;
         for(int coordinate : CANDIDATE_MOVE_COORDIANTES){

@@ -33,7 +33,7 @@ public class Rook extends Piece{
      * @return return the list of all the possible moves
      */
     @Override
-    public Collection<Move> calculateMovess(Board board) {
+    public Collection<Move> calculateMoves(Board board) {
         final List<Move> legalMoves = new ArrayList<>();
         for(int coordinateOffset : CANDIDATE_MOVE_COORDIANTES_VECTOR) {
             int candidateDestCordinate = this.position;

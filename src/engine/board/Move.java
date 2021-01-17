@@ -7,9 +7,10 @@ import engine.pieces.Rook;
 import static engine.board.Board.*;
 
 public abstract class Move {
-    final Board board;
-    final Piece movedPiece;
-    final int destCoordinate;
+    protected final Board board;
+    protected final Piece movedPiece;
+    protected final int destCoordinate;
+    protected final boolean isFirstMove;
 
     public static final Move NULL_MOVE = new NullMove();
 
@@ -19,10 +20,18 @@ public abstract class Move {
      * @param movedPiece piece we want to move
      * @param destCoordinate tile coordinate we want to move the piece to
      */
-    public Move(final Board board, final Piece movedPiece, final int destCoordinate) {
+    private Move(final Board board, final Piece movedPiece, final int destCoordinate) {
         this.board = board;
         this.movedPiece = movedPiece;
         this.destCoordinate = destCoordinate;
+        this.isFirstMove = movedPiece.isFirstMove();
+    }
+
+    private Move(final Board board, final int destCoordinate){
+        this.board = board;
+        this.destCoordinate = destCoordinate;
+        this.movedPiece = null;
+        this.isFirstMove = false;
     }
 
     public Piece getMovedPiece() {
@@ -72,6 +81,15 @@ public abstract class Move {
             super(board, movedPiece, destCoordinate);
         }
 
+        @Override
+        public String toString() {
+            return this.movedPiece.getPieceType().toString() + BoardUtils.getPositionAtCoordinate(this.destCoordinate);
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return this == obj || obj instanceof NeutralMove &&  super.equals(obj);
+        }
     }
     public static class AttackMove extends Move{
         Piece attackedPiece;
@@ -118,6 +136,11 @@ public abstract class Move {
             }
             final AttackMove otherMove = (AttackMove) obj;
             return super.equals(otherMove) && this.attackedPiece.equals(otherMove.getAttackPiece());
+        }
+
+        @Override
+        public String toString() {
+            return this.movedPiece.getPieceType().toString() + BoardUtils.getPositionAtCoordinate(this.destCoordinate);
         }
     }
     public static final class PawnMove extends Move {
@@ -229,7 +252,7 @@ public abstract class Move {
     }
     public static final class NullMove extends Move{
         public NullMove() {
-            super(null, null, -1);
+            super(null, -1);
         }
 
         @Override
@@ -256,6 +279,7 @@ public abstract class Move {
     public int hashCode() {
         int result = 31 + this.movedPiece.hashCode();
         result = 31 * result + this.destCoordinate;
+        result = 31 * result + this.movedPiece.getPosition();
         return result;
     }
 
@@ -269,7 +293,8 @@ public abstract class Move {
         }
         final Move otherMove = (Move) obj;
         return this.getMovedPiece().equals(otherMove.getMovedPiece()) &&
-                this.getDestinationCoordinate() == otherMove.getDestinationCoordinate();
+                this.getDestinationCoordinate() == otherMove.getDestinationCoordinate() &&
+                this.getCurrentCoordinate() == otherMove.getCurrentCoordinate();
     }
 }
 

@@ -34,7 +34,7 @@ public class Pawn extends Piece{
      * @return return the list of all the possible moves
      */
     @Override
-    public Collection<Move> calculateMovess(final Board board) {
+    public Collection<Move> calculateMoves(final Board board) {
         final List<Move> legalMoves = new ArrayList<>();
         for(int coordinateOffset : CANDIDATE_MOVE_COORDIANTES) {
             final int candidateDestCordinate = this.position + this.pieceColor.getDirection() * coordinateOffset;

@@ -49,7 +49,7 @@ public class Board {
     private Collection<Move> calculatePlayerMoves(Collection<Piece> pieces) {
         Collection<Move> possbileMoves = new ArrayList<>();
         for(Piece piece : pieces){
-            possbileMoves.addAll(piece.calculateMovess(this));
+            possbileMoves.addAll(piece.calculateMoves(this));
 
         }
         return possbileMoves;

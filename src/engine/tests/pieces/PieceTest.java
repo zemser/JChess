@@ -32,13 +32,13 @@ public class PieceTest extends TestCase {
         black_color = BLACK;
         whiteOne = new Rook(2, WHITE) {
             @Override
-            public List<Move> calculateMovess(Board board) {
+            public List<Move> calculateMoves(Board board) {
                 return null;
             }
         };
         blackOne = new King(2, BLACK) {
             @Override
-            public List<Move> calculateMovess(Board board) {
+            public List<Move> calculateMoves(Board board) {
                 return null;
             }
         };

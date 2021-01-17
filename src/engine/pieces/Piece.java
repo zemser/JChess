@@ -31,7 +31,7 @@ public abstract class Piece {
 
         }
 
-        public abstract Collection<Move> calculateMovess(final Board board);
+        public abstract Collection<Move> calculateMoves(final Board board);
 
         public Color getPieceColor() {
                 return pieceColor;
