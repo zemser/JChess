@@ -42,7 +42,7 @@ public class Pawn extends Piece{
             if(!isValidCoordinate(candidateDestCordinate)) continue;
             if(coordinateOffset == 8 && !(board.getTile(candidateDestCordinate).isTileOccupied())){
                 if(this.pieceColor.isPawnPromotionTile(candidateDestCordinate)){
-                    legalMoves.add(new PawnPromotionMove(new PawnMove(board, this, candidateDestCordinate)));
+                    legalMoves.add(new PawnPromotionMove(new PawnMove(board, this, candidateDestCordinate), this.getPromotionPiece()));
                 }else{
                     legalMoves.add(new PawnMove(board, this, candidateDestCordinate));
                 }
@@ -59,7 +59,7 @@ public class Pawn extends Piece{
                         final Piece pieceOnDestCoordinate = board.getTile(candidateDestCordinate).getPiece();
                         if(this.pieceColor != pieceOnDestCoordinate.getPieceColor()){
                             if(this.pieceColor.isPawnPromotionTile(candidateDestCordinate)){
-                                legalMoves.add(new PawnPromotionMove(new Move.PawnAttackMove(board, this, candidateDestCordinate, pieceOnDestCoordinate)));
+                                legalMoves.add(new PawnPromotionMove(new Move.PawnAttackMove(board, this, candidateDestCordinate, pieceOnDestCoordinate), this.getPromotionPiece()));
                             }else{
                                 legalMoves.add(new Move.PawnAttackMove(board, this, candidateDestCordinate, pieceOnDestCoordinate));
                             }
@@ -79,7 +79,7 @@ public class Pawn extends Piece{
                         final Piece pieceOnDestCoordinate = board.getTile(candidateDestCordinate).getPiece();
                         if(this.pieceColor != pieceOnDestCoordinate.getPieceColor()){
                             if(this.pieceColor.isPawnPromotionTile(candidateDestCordinate)){
-                                legalMoves.add(new PawnPromotionMove(new Move.PawnAttackMove(board, this, candidateDestCordinate, pieceOnDestCoordinate)));
+                                legalMoves.add(new PawnPromotionMove(new Move.PawnAttackMove(board, this, candidateDestCordinate, pieceOnDestCoordinate), this.getPromotionPiece()));
                             }else{
                                 legalMoves.add(new Move.PawnAttackMove(board, this, candidateDestCordinate, pieceOnDestCoordinate));
                             }

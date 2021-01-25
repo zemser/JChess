@@ -7,9 +7,9 @@ TODO add the highlight move in video 36 isn't used
 check execute method in pawnPromotion
 add isCasteld in king constructor
 and isCastled in player - check it in castling test
-cant make a move after king is in check
+cant make a move after king is in check - need to change transit board in player.makeMove
 taken pieces dont show in panel
-pawn promotion not working
+pawn promotion only to queen
 CV:
 
 I used final for many of objects, like the tile because i want it to be immutable.

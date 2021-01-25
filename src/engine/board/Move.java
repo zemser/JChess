@@ -12,7 +12,6 @@ public abstract class Move {
     protected final int destCoordinate;
     protected final boolean isFirstMove;
 
-    public static final Move NULL_MOVE = new NullMove();
 
     /**
      * Constructor for Move object
@@ -86,6 +85,18 @@ public abstract class Move {
         return builder.build();  //create and return a new board
     }
 
+    /**
+     * @return Returns a new board that represents the board as it is before executing the move
+     */
+    public Board undo(){
+        final Builder builder = new Builder();
+        for(Piece piece : this.board.getAllPieces()){
+            builder.setPiece(piece);
+        }
+        builder.setMoveMaker(this.board.currentPlayer().getColor());
+        return builder.build();
+    }
+
     public static final class NeutralMove extends Move {
         public NeutralMove(final Board board, final Piece movedPiece, final int destCoordinate) {
             super(board, movedPiece, destCoordinate);
@@ -144,7 +155,7 @@ public abstract class Move {
 
         @Override
         public String toString() {
-            return this.movedPiece.getPieceType().toString() + BoardUtils.getPositionAtCoordinate(this.destCoordinate);
+            return this.movedPiece.getPieceType().toString() + "x" + BoardUtils.getPositionAtCoordinate(this.destCoordinate);
         }
     }
     public static class MajorAttackMove extends AttackMove {
@@ -223,14 +234,28 @@ public abstract class Move {
             builder.setMoveMaker(this.board.currentPlayer().getOpponent().getColor()); //switch turn to play to other player
             return builder.build();  //create and return a new board
         }
+        /**
+         * @return Returns a new board that represents the board as it is before executing the move
+         */
+        public Board undo(){
+            final Builder builder = new Builder();
+            for(Piece piece : this.board.getAllPieces()){
+                builder.setPiece(piece);
+            }
+            builder.setEnPassantPawn((Pawn)this.getAttackPiece());
+            builder.setMoveMaker(this.board.currentPlayer().getColor());
+            return builder.build();
+        }
     }
     public static final class PawnPromotionMove extends Move{
         final Move decoratedMove;
         final Pawn promotedPawn;
-        public PawnPromotionMove(final Move decoratedMove){
+        final Piece promotionPiece;
+        public PawnPromotionMove(final Move decoratedMove, final Piece promotionPiece){
             super(decoratedMove.getBoard(), decoratedMove.getMovedPiece(), decoratedMove.getDestinationCoordinate());
             this.decoratedMove = decoratedMove;
             this.promotedPawn = (Pawn) decoratedMove.getMovedPiece();
+            this.promotionPiece = promotionPiece;
         }
 
         /**
@@ -249,7 +274,7 @@ public abstract class Move {
             for(final Piece piece : pawnMovedBoard.currentPlayer().getOpponent().getActivePieces()){
                 builder.setPiece(piece);
             }
-            builder.setPiece(this.promotedPawn.getPromotionPiece().movePiece(this));
+            builder.setPiece(this.promotionPiece.movePiece(this));
             builder.setMoveMaker(pawnMovedBoard.currentPlayer().getColor());  //we already did execute in the this function so keep the color of the next move maker the same
             return builder.build();
         }
@@ -277,7 +302,7 @@ public abstract class Move {
         @Override
         public String toString() {
             return this.movedPiece.getPieceType().toString() + BoardUtils.getPositionAtCoordinate(this.destCoordinate)
-                    + "=" + this.promotedPawn.getPromotionPiece().toString();
+                    + "=" + this.promotionPiece.getPieceType().toString();
         }
     }
 
@@ -432,6 +457,7 @@ public abstract class Move {
      * and return the move that matches the given coordinates, if no such move exits on the board return NULL_MOVE
      */
     public static class MoveFactory{
+        private static final Move NULL_MOVE = new NullMove();
         private MoveFactory(){
             throw new RuntimeException("Cant create instance of factory");
         }

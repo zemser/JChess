@@ -9,6 +9,8 @@ import engine.players.Player;
 import engine.players.WhitePlayer;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Board {
     private final List<Tile> gameBoard;
@@ -194,7 +196,9 @@ public class Board {
         return Iterables.unmodifiableIterable(Iterables.concat(this.whitePlayer.getLegalMoves(), this.blackPlayer.getLegalMoves()));
     }
 
-
+    public Iterable<Piece> getAllPieces(){
+        return Iterables.unmodifiableIterable(Iterables.concat(this.getWhitePieces(), this.getBlackPieces()));
+    }
 
     /***
      * Builder static class - we create the booard with the builder. it sets all the fields and configuration and then

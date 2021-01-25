@@ -92,15 +92,19 @@ public abstract class Player {
     public MoveMaker makeMove(final Move move){
         //checks if the move is in the collection of legal moves or moved piece is not of current player color
         if(!isMoveLegal(move) || this.board.currentPlayer().getColor() != move.getMovedPiece().getPieceColor()){
-            return new MoveMaker(this.board, move, MoveStatus.ILLEGAL_MOVE);
+            return new MoveMaker(this.board, this.board, move, MoveStatus.ILLEGAL_MOVE);
         }
         final Board transitBoard = move.execute();
         final Collection<Move> kingAttacks = Player.calculateAttackOnTile(transitBoard.currentPlayer().getOpponent().getPlayerKing().getPosition(),
                 transitBoard.currentPlayer().getLegalMoves());   //calculate list of enemy attacking moves on the king
         if(!kingAttacks.isEmpty()){
-            return new MoveMaker(this.board, move, MoveStatus.LEAVES_PLAYER_IN_CHECK);
+            return new MoveMaker(this.board,transitBoard, move, MoveStatus.LEAVES_PLAYER_IN_CHECK); //TODO WAS ORIGNALY THIS.BOARD INSTEAD OF TRANSIT
         }
-        return  new MoveMaker(transitBoard, move, MoveStatus.DONE);
+        return  new MoveMaker(this.board, transitBoard, move, MoveStatus.DONE);
+    }
+
+    public MoveMaker unMakeMove(final Move move){
+        return new MoveMaker(this.board, move.undo(), move, MoveStatus.DONE);
     }
 
     public Collection<Move> getLegalMoves(){
