@@ -273,6 +273,12 @@ public abstract class Move {
         public boolean equals(Object obj) {
             return this == obj || (obj instanceof PawnPromotionMove) && this.decoratedMove.equals(obj);
         }
+
+        @Override
+        public String toString() {
+            return this.movedPiece.getPieceType().toString() + BoardUtils.getPositionAtCoordinate(this.destCoordinate)
+                    + "=" + this.promotedPawn.getPromotionPiece().toString();
+        }
     }
 
     public static final class PawnJumpMove extends Move {

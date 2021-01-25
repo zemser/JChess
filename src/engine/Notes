@@ -7,7 +7,7 @@ TODO add the highlight move in video 36 isn't used
 check execute method in pawnPromotion
 add isCasteld in king constructor
 and isCastled in player - check it in castling test
-cant make a move that leaves king in check
+cant make a move after king is in check
 taken pieces dont show in panel
 pawn promotion not working
 CV:

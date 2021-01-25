@@ -26,11 +26,12 @@ public class Board {
         this.gameBoard = createBoard(builder);
         this.whitePieces = calculateActivePieces(this.gameBoard, Color.WHITE);  // get collections of all the white piece on the board
         this.blackPieces = calculateActivePieces(this.gameBoard, Color.BLACK);  // get collections of all the black piece on the board
+
+        this.enPassantPawn = builder.enPassantPawn;
         //need to add legal moves
         final Collection<Move> whitePlayerMoves = calculatePlayerMoves(this.whitePieces); // collection of the moves the combined white pieces can make
         final Collection<Move> blackPlayerMoves = calculatePlayerMoves(this.blackPieces); // collection of the moves the combined black pieces can make
 
-        this.enPassantPawn = builder.enPassantPawn;
         this.whitePlayer = new WhitePlayer(this, whitePlayerMoves, blackPlayerMoves);  // create white player object
         this.blackPlayer = new BlackPlayer(this, blackPlayerMoves, whitePlayerMoves);  // create black player object
         this.currentPlayer = builder.nextMoveMaker.choosePlayer(this.whitePlayer, this.blackPlayer);

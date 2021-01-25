@@ -24,7 +24,7 @@ public enum Color {
          */
         @Override
         public boolean isPawnPromotionTile(int position) {
-            return BoardUtils.isBetween(position, 56, 63);
+            return BoardUtils.isBetween(position, 0, 7);
         }
 
         @Override
@@ -53,7 +53,7 @@ public enum Color {
          */
         @Override
         public boolean isPawnPromotionTile(int position) {
-            return BoardUtils.isBetween(position, 0, 7);
+            return BoardUtils.isBetween(position, 56, 63);
         }
 
         @Override
