@@ -45,7 +45,7 @@ public class Knight extends Piece{
                 }else{ //tile is occupied, so check if there is an enemy piece on that tile
                     final Piece candiatePiece = candidateDest.getPiece();
                     if(candiatePiece.getPieceColor() != this.getPieceColor()){
-                        legalMoves.add(new Move.AttackMove(board, this, candidateDestCordinate,candiatePiece));
+                        legalMoves.add(new Move.MajorAttackMove(board, this, candidateDestCordinate,candiatePiece));
                     }
                 }
             }

@@ -40,7 +40,7 @@ public class Queen extends Piece {
         for(int coordinateOffset : CANDIDATE_MOVE_COORDIANTES_VECTOR) {
             int candidateDestCordinate = this.position;
             while (isValidCoordinate(candidateDestCordinate)) {
-                if (isValidDestinationTile(candidateDestCordinate, coordinateOffset))
+                if (!isValidDestinationTile(candidateDestCordinate, coordinateOffset))
                     break;
                 candidateDestCordinate += coordinateOffset;
                 if (isValidCoordinate(candidateDestCordinate)) {
@@ -50,7 +50,7 @@ public class Queen extends Piece {
                     } else {
                         final Piece candidatePiece = candidateDestTile.getPiece();
                         if (candidatePiece.getPieceColor() != this.getPieceColor()) {
-                            legalMoves.add(new Move.AttackMove(board, this, candidateDestCordinate, candidatePiece));
+                            legalMoves.add(new Move.MajorAttackMove(board, this, candidateDestCordinate, candidatePiece));
                         }
                         break; //there a piece of ours in that lane
                     }

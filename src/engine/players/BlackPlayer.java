@@ -21,7 +21,7 @@ public class BlackPlayer extends Player {
      * @return collection of all the black pieces on the board
      */
     @Override
-    public Collection<Piece> getActivePiece() {
+    public Collection<Piece> getActivePieces() {
         return this.board.getBlackPieces();
     }
     /**
@@ -53,7 +53,7 @@ public class BlackPlayer extends Player {
         if(this.playersKings.isFirstMove() && !this.isInCheck()) {
             // King side castle
             if(!board.getTile(5).isTileOccupied() && !board.getTile(6).isTileOccupied()){ //lane between king and rook is clear
-                final Tile rookTile = this.board.getTile(63);  //get tile that the rook should reside on
+                final Tile rookTile = this.board.getTile(7);  //get tile that the rook should reside on
                 if(rookTile.isTileOccupied() && rookTile.getPiece().isFirstMove()){
                     //check that free lane between king and rook is threatened
                     if(calculateAttackOnTile(5, opponentLegals).isEmpty() && calculateAttackOnTile(6, opponentLegals).isEmpty()){
@@ -76,5 +76,9 @@ public class BlackPlayer extends Player {
             }
         }
         return ImmutableList.copyOf(kingCastles);
+    }
+    @Override
+    public String toString() {
+        return "Black";
     }
 }

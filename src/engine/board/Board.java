@@ -19,6 +19,8 @@ public class Board {
     private final BlackPlayer blackPlayer;
     private final Player currentPlayer;
 
+    private final Pawn enPassantPawn;
+
 
     private Board(final Builder builder){
         this.gameBoard = createBoard(builder);
@@ -28,14 +30,14 @@ public class Board {
         final Collection<Move> whitePlayerMoves = calculatePlayerMoves(this.whitePieces); // collection of the moves the combined white pieces can make
         final Collection<Move> blackPlayerMoves = calculatePlayerMoves(this.blackPieces); // collection of the moves the combined black pieces can make
 
-
+        this.enPassantPawn = builder.enPassantPawn;
         this.whitePlayer = new WhitePlayer(this, whitePlayerMoves, blackPlayerMoves);  // create white player object
         this.blackPlayer = new BlackPlayer(this, blackPlayerMoves, whitePlayerMoves);  // create black player object
         this.currentPlayer = builder.nextMoveMaker.choosePlayer(this.whitePlayer, this.blackPlayer);
     }
 
     /**
-     * gett for the current player on the board
+     * get for the current player on the board
      * @return Player object - the next player to make a move
      */
     public Player currentPlayer(){
@@ -51,6 +53,23 @@ public class Board {
         for(Piece piece : pieces){
             possbileMoves.addAll(piece.calculateMoves(this));
 
+        }
+        return possbileMoves;
+    }
+
+    /**
+     * created for test purposes
+     * @param piece piece we want to move
+     * @param color color of the piece
+     * @return all piece's legal moves on the board
+     */
+    public Collection<Move> calculatePieceMove(Piece piece, Color color) {
+        Collection<Move> possbileMoves = new ArrayList<>();
+        Collection<Move> moves = color == Color.WHITE ? this.getWhitePlayer().getLegalMoves() : this.getBlackPlayer().getLegalMoves();
+        for(Move move : moves){
+            if(move.getMovedPiece().equals(piece)) {
+                possbileMoves.add(move);
+            }
         }
         return possbileMoves;
     }
@@ -132,6 +151,11 @@ public class Board {
         return gameBoard.get(coordinate);
     }
 
+    public Pawn getEnPassantPawn() {
+        return this.enPassantPawn;
+    }
+
+
     public Player getBlackPlayer(){
         return this.blackPlayer;
     }
@@ -162,11 +186,13 @@ public class Board {
     }
 
     /**
+     * concatenate the black and white legal moves - each of the player calls getLegalMoves() - calculates its legal moves (also castling moves)
      * @return collection of all the moves the white and the black player can make
      */
     public Iterable<Move> getAllLegalMoves() {
         return Iterables.unmodifiableIterable(Iterables.concat(this.whitePlayer.getLegalMoves(), this.blackPlayer.getLegalMoves()));
     }
+
 
 
     /***

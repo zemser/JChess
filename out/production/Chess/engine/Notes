@@ -3,7 +3,10 @@ Bugs:
 dependencies: we use Guava for immutable objects. for example: ImmutableMap.copyOf(map); ImmutableList.copyOf(activePieces);
 Iterables.unmodifiableIterable(Iterables.concat(this.whitePlayer.getLegalMoves(), this.blackPlayer.getLegalMoves()));
 
-
+TODO add the highlight move in video 36 isn't used
+check execute method in pawnPromotion
+add isCasteld in king constructor
+and isCastled in player - check it in castling test
 CV:
 
 I used final for many of objects, like the tile because i want it to be immutable.
@@ -12,17 +15,18 @@ also it makes the program thread safe. u cant extend a final class, so classes o
 
 board:
 we needed collection to save the tiles, first i chose an array of 64 length but then i changed it to list
-because i wanted it to be immautable and u cant have an immutable array in java
+because i wanted it to be immautable and u cant have an immutable array in java.
+it may seem inefficient that we create a new board every move, but it isnt really creating a new object - we refer to already created objects in the board (for example tile cache)
 
 why we used builder:
 it is a good idea when we face many constructor parameters:
 we could use other techniques such as
-1)Telescoping -making many constructors for different paramters we want to pass but its less readable and harder to wrtie
+1)Telescoping -making many constructors for different parameters we want to pass but its less readable and harder to wrtie
 2)javabeans pattern = set all the fields using setters, but its inconsistent and mandates mutability
 3) Builder - instead of making the desired object directly,
-the client calls a constructor with all the required paramters and gets a builder object. the client calls
-setter-like methods on the builder to set each optional parameter. finally the cliect calls parameterless
-build method to generate the object, which is typically immutbale. the builder is typically  static member class
+the client calls a constructor with all the required parameters and gets a builder object. the client calls
+setter-like methods on the builder to set each optional parameter. finally the client calls parameterless
+build method to generate the object, which is typically immutable. the builder is typically  static member class
 of the class it builds.
 
 we use factory in player class to create a move object

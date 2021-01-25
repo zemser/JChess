@@ -76,25 +76,31 @@ public abstract class Piece {
                 return this.cachedHashCode;
         }
 
+        public int getPieceValue() {
+                return this.pieceType.getPieceValue();
+        }
+
         /**
          * Enum that indicates the type of the piece, each enums has a string field for print purpose
           */
         public enum PieceType {
-                PAWN("P"),
-                KNIGHT("N"),
-                ROOK("R"),
-                BISHOP("B"),
-                QUEEN("Q"),
-                KING("K");
+                PAWN("P",100),
+                KNIGHT("N", 300),
+                ROOK("R", 500),
+                BISHOP("B",300),
+                QUEEN("Q", 500),
+                KING("K", 10000);
 
-                private  String pieceName;
+                private String pieceName;
+                private int pieceValue;   //for the comparator - sorting the pieces
 
                 /**
                  * construct a PieceType Enums with the given string
                  * @param PieceString value for the pieceString field of the piece type enum
                  */
-                PieceType(final String PieceString){
-                   this.pieceName = PieceString;
+                PieceType(final String PieceString, final int pieceValue){
+                        this.pieceName = PieceString;
+                        this.pieceValue = pieceValue;
                 }
 
 
@@ -118,6 +124,10 @@ public abstract class Piece {
                 }
                 public boolean isRook(){
                         return this.pieceName == "R" ? true : false;
+                }
+
+                public int getPieceValue() {
+                        return this.pieceValue;
                 }
         }
 }

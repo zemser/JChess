@@ -24,4 +24,8 @@ public class MoveMaker {
     public Board getBoard() {
         return this.moveBoard;
     }
+
+    public Move getMove() {
+        return move;
+    }
 }

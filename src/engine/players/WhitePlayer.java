@@ -23,7 +23,7 @@ public class WhitePlayer extends Player{
      * @return collection of all the white pieces on the board
      */
     @Override
-    public Collection<Piece> getActivePiece() {
+    public Collection<Piece> getActivePieces() {
         return this.board.getWhitePieces();
     }
 
@@ -80,5 +80,10 @@ public class WhitePlayer extends Player{
             }
         }
         return ImmutableList.copyOf(kingCastles);
+    }
+
+    @Override
+    public String toString() {
+        return "White";
     }
 }

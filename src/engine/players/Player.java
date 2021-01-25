@@ -23,13 +23,13 @@ public abstract class Player {
      * Constructor for object Player
      * @param board reference to the board
      * @param legalMoves Collection of moves the player can make
-     * @param oppoentMoves Collection of move the opponent player can make
+     * @param opponentMoves Collection of move the opponent player can make
      */
-    public Player(final Board board, Collection<Move> legalMoves, Collection<Move> oppoentMoves) {
+    public Player(final Board board, Collection<Move> legalMoves, Collection<Move> opponentMoves) {
         this.board = board;
         this.playersKings = establishKing();
-        this.legalMoves = ImmutableList.copyOf(Iterables.concat(legalMoves, calculateKingCastles(legalMoves, oppoentMoves)));
-        this.isInCheck = !Player.calculateAttackOnTile(this.playersKings.getPosition(), oppoentMoves).isEmpty();
+        this.legalMoves = ImmutableList.copyOf(Iterables.concat(legalMoves, calculateKingCastles(legalMoves, opponentMoves)));
+        this.isInCheck = !Player.calculateAttackOnTile(this.playersKings.getPosition(), opponentMoves).isEmpty();
     }
 
     /**
@@ -53,7 +53,7 @@ public abstract class Player {
      * @return King piece of the player
      */
     private King establishKing(){
-        for(final Piece piece : getActivePiece()){
+        for(final Piece piece : getActivePieces()){
             if(piece.getPieceType().isKing()){
                 return (King)piece;
             }
@@ -70,6 +70,19 @@ public abstract class Player {
         return this.legalMoves.contains(move);
     }
 
+    public Move getLegalMove(final int index){
+        if(index >= this.legalMoves.size() || index < 0){
+            throw new RuntimeException("from getLegalMove in PLAYER - got invalid index");
+        }
+        int count = 0;
+        for(Move m : this.legalMoves){
+            if(count++ == index){
+                return m;
+            }
+        }
+        throw new RuntimeException("from getLegalMove - shouldn't get here");
+    }
+
     /**
      * illustrates a move on the board: if move illegal status will be ILLEGAL_MOVE | if move is legal and poses a threat on the our king status
      * will be LEAVES_PLAYER_IN_CHECK | if move is legal and not poses threat on the our king status will be DONE
@@ -77,12 +90,13 @@ public abstract class Player {
      * @return MoveMaker object (represents the move on the board)
      */
     public MoveMaker makeMove(final Move move){
-        if(!isMoveLegal(move)){ //checks if the move is in the collection of legal moves
+        //checks if the move is in the collection of legal moves or moved piece is not of current player color
+        if(!isMoveLegal(move) || this.board.currentPlayer().getColor() != move.getMovedPiece().getPieceColor()){
             return new MoveMaker(this.board, move, MoveStatus.ILLEGAL_MOVE);
         }
         final Board transitBoard = move.execute();
         final Collection<Move> kingAttacks = Player.calculateAttackOnTile(transitBoard.currentPlayer().getOpponent().getPlayerKing().getPosition(),
-                transitBoard.currentPlayer().getLegalMoves());
+                transitBoard.currentPlayer().getLegalMoves());   //calculate list of enemy attacking moves on the king
         if(!kingAttacks.isEmpty()){
             return new MoveMaker(this.board, move, MoveStatus.LEAVES_PLAYER_IN_CHECK);
         }
@@ -111,6 +125,10 @@ public abstract class Player {
         return this.isInCheck && !hasEscapeMove();
     }
 
+    public boolean isCastled() {
+        return this.playersKings.isCastled();
+    }
+
     /**
      * iterate over all the legal moves
      * @return true if the king has no escape moves
@@ -134,7 +152,7 @@ public abstract class Player {
     /**
      * @return collection of all player's active pieces on the board
      */
-    public abstract Collection<Piece> getActivePiece();
+    public abstract Collection<Piece> getActivePieces();
 
     public abstract Color getColor();
 

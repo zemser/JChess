@@ -15,6 +15,8 @@ import static engine.board.BoardUtils.isValidCoordinate;
 
 public class King extends Piece{
     private final static int[] CANDIDATE_MOVE_COORDIANTES = {-1, 1, 7, -7, 7, 8, -8, 9, -9}; // list of all optaional moves the piece can make
+    private boolean isCastled;
+
     /**
      * @param pos position of the King on the board
      * @param color color of the King piece
@@ -22,9 +24,13 @@ public class King extends Piece{
      * */
     public King(final int pos, final Color color) {
         super(pos, color, PieceType.KING, true);
+        this.isCastled = false;
     }
+
     public King(final int pos, final Color color, boolean isFirstMove) {
         super(pos, color, PieceType.KING, isFirstMove);
+        this.isCastled = false;  //TODO add passed arguemnt isCasteld
+
     }
 
 
@@ -44,8 +50,8 @@ public class King extends Piece{
                 final Piece pieceAtDest = board.getTile(candidateDestCoordinate).getPiece();
                 if(pieceAtDest == null){
                     legalMoves.add(new Move.NeutralMove(board, this, candidateDestCoordinate));
-                } else if(this.pieceColor == pieceAtDest.getPieceColor()){
-                    legalMoves.add(new Move.AttackMove(board, this, candidateDestCoordinate, pieceAtDest));
+                } else if(this.pieceColor != pieceAtDest.getPieceColor()){
+                    legalMoves.add(new Move.MajorAttackMove(board, this, candidateDestCoordinate, pieceAtDest));
                 }
             }
         }
@@ -81,5 +87,9 @@ public class King extends Piece{
     @Override
     public King movePiece(Move move) {
         return new King(move.getDestinationCoordinate(), move.getMovedPiece().getPieceColor());
+    }
+
+    public boolean isCastled() {
+        return this.isCastled;
     }
 }

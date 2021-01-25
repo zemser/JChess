@@ -30,10 +30,13 @@ public class Table {
     private static final Dimension OUTER_FRAME_DIMENSION = new Dimension(600, 600);
     private static final Dimension BOARD_PANEL_DIMENSION = new Dimension(400, 350);
     private static final Dimension TILE_PANEL_DIMENSION = new Dimension(10, 10);
-    private static String pieceIconPath = "art/basic/";
+    public static String pieceIconPath = "art/basic/";
 
     private final JFrame gameFrame;
+    private final GameHistoryPanel gameHistoryPanel;
+    private final TakenPiecesPanel takenPiecesPanel;
     private final BoardPanel boardPanel;
+    private final MoveLog moveLog;
     private Board board;  //cant be final because we change the reference to a new board after a successful move
 
     private Tile srcTile;
@@ -62,10 +65,15 @@ public class Table {
 
         this.board = Board.createInitialBoard();
 
+        this.gameHistoryPanel = new GameHistoryPanel();
+        this.takenPiecesPanel = new TakenPiecesPanel();
         this.boardPanel = new BoardPanel();
+        this.moveLog = new MoveLog();
         this.boardDirection = BoardDirection.NORMAL;  //show board in normal order (not flipped)
         this.highlightLegalMoves = false;
+        this.gameFrame.add(this.takenPiecesPanel, BorderLayout.WEST);
         this.gameFrame.add(this.boardPanel, BorderLayout.CENTER);
+        this.gameFrame.add(this.gameHistoryPanel, BorderLayout.EAST);
 
         this.gameFrame.setVisible(true);
     }
@@ -210,7 +218,7 @@ public class Table {
                                 final MoveMaker transition = board.currentPlayer().makeMove(move); // make the move
                                 if(transition.getMoveStatus().isDone()){  // the move is legal so we can update the board
                                     board = transition.getBoard();
-                                    //TODO ADD MOVE MADE TO A MOVE LOG
+                                    moveLog.addMove(move); //adds the move we made to the move log
                                 }
                             }else{
                                 System.out.println("illegalm move");
@@ -223,6 +231,8 @@ public class Table {
                         SwingUtilities.invokeLater(new Runnable() {
                             @Override
                             public void run() {
+                                gameHistoryPanel.redo(board, moveLog);
+                                takenPiecesPanel.redo(moveLog);
                                 boardPanel.drawBoard(board);
                             }
                         });
@@ -290,6 +300,7 @@ public class Table {
         public void drawTile(Board board) {
             assignTileColor();
             assignTilePieceIcon(board);
+            highlightLegalMoves(board);
             validate();
             repaint();
 
@@ -299,7 +310,7 @@ public class Table {
                 for(final Move move : pieceLegalMoves(board)){
                     if(move.getDestinationCoordinate() == this.tileId){
                         try {
-                            add(new JLabel((new ImageIcon(ImageIO.read(new File("art/basic/green_dot.png"))))));
+                            add(new JLabel((new ImageIcon(ImageIO.read(new File("art/shapes/green_dot.png"))))));
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -312,6 +323,33 @@ public class Table {
                 return humanMovedPiece.calculateMoves(board);
             }
         return Collections.emptyList();
+        }
+    }
+    public static class MoveLog{
+
+        private final List<Move> moves;
+
+        public MoveLog() {
+            this.moves = new ArrayList<>();
+        }
+
+        public List<Move> getMoves() {
+            return moves;
+        }
+        public void addMove(Move move) {
+            this.moves.add(move);
+        }
+        public int size(){
+            return this.moves.size();
+        }
+        public void clear(){
+            this.moves.clear();
+        }
+        public Move removeMove(int i){
+            return this.moves.remove(i);
+        }
+        public boolean removeMove(final Move move){
+            return this.moves.remove(move);
         }
     }
 

@@ -70,7 +70,7 @@ public class BoardUtils {
      * @param position algebraic notation
      * @return  the corresponding coordinate number
      */
-    public static int getCooridanteAtPosition(final String position){
+    public static int getCoordinateAtPosition(final String position){
         return POSITION_TO_COORDINATE.get(position);
     }
 }

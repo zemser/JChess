@@ -39,7 +39,7 @@ public class Bishop extends Piece{
         for(int coordinateOffset : CANDIDATE_MOVE_COORDIANTES_VECTOR) {
             int candidateDestCordinate = this.position;
             while (isValidCoordinate(candidateDestCordinate)) {
-                if (isValidDestinationTile(candidateDestCordinate, coordinateOffset))
+                if (!isValidDestinationTile(candidateDestCordinate, coordinateOffset))
                     break;
                 candidateDestCordinate += coordinateOffset;
                 if (isValidCoordinate(candidateDestCordinate)) {
@@ -49,7 +49,7 @@ public class Bishop extends Piece{
                     } else {
                         final Piece candiDatePiece = candidateDestTile.getPiece();
                         if (candiDatePiece.getPieceColor() != this.getPieceColor()) {
-                            legalMoves.add(new Move.AttackMove(board, this, candidateDestCordinate, candiDatePiece));
+                            legalMoves.add(new Move.MajorAttackMove(board, this, candidateDestCordinate, candiDatePiece));
                         }
                         break; //there a piece of ours in that lane
                     }

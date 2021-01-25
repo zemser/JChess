@@ -14,7 +14,7 @@ public abstract class Tile {
 
 
     /**
-     * create a map and for each of the 64 coordianted create a new tile and put in the map.
+     * create a map and for each of the 64 coordinates create a new tile and put in the map.
      * @return - the ImmutableMap (using the guava library)
      */
     private  static Map<Integer, EmptyTile> createAllEmptyTiles(){
@@ -26,14 +26,14 @@ public abstract class Tile {
     }
 
     /**
-     * @param titleCoordiante - the coordiante of the piece on the engine.board
+     * @param titleCoordinate - the coordiante of the piece on the engine.board
      * @param piece - the piece on the tile (if there is none - piece is null)
      * @return the if piece is null return an empty tile - from the existing empty_tiles map, else create a new tile with the piece
      */
-    public static Tile createTile(final int titleCoordiante, final  Piece piece){
+    public static Tile createTile(final int titleCoordinate, final  Piece piece){
         if(piece == null)
-            return empty_tiles.get(titleCoordiante);
-        return new OccupiedTile(titleCoordiante, piece);
+            return empty_tiles.get(titleCoordinate);
+        return new OccupiedTile(titleCoordinate, piece);
     }
 
     /**
